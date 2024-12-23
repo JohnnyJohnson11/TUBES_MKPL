@@ -1,0 +1,186 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  html, body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f3f3;
+    margin: 0; /* Remove default margin */
+    flex-direction: column;
+  }
+
+  .navbar {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #A75D5D; /* Navbar background color */
+    padding: 10px 20px; /* Padding for navbar */
+    width: 100%; /* Full width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+  }
+  .navbar h1 .highlight{
+    background-color: #FC766A;
+    color:#FFFFFF;
+    padding: 2px;
+  }
+  .navbar h1{
+    color:#FC766A;
+  }
+  .nav-list {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0; /* Reset margin to avoid extra spacing */
+  }
+  
+  .nav-list li {
+    margin: 0 15px; /* Space between links */
+  }
+  
+  .nav-list a {
+    color: #fff; /* White text color */
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
+
+  .post-job-btn {
+    background-color: #783937;
+    padding: 15px;
+  }
+
+.top-bar {
+    background-image: url('images/background.png');
+    background-size: cover; 
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.company-section{
+    background-color: white;    
+    width: 84%;
+    margin-left: 100px;
+}
+
+.company-section img{
+    background-size:contain; 
+    display: flex;
+    width: 100%;
+    align-items: center;
+    color: white;
+    margin:40px 100px;
+    background-repeat: no-repeat;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    margin-left: 0px;
+}
+
+.company-logo {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+}
+
+.company-details {
+    flex-grow: 1;
+}
+
+.company-details h1 {
+    font-size: 24px;
+    margin: 0 0 10px;
+}
+
+.rating {
+    font-size: 16px;
+    color: #333;
+}
+
+.tabs {
+    margin-top: 10px;
+}
+
+.tab {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.tab:hover {
+    text-decoration: underline;
+}
+
+.write-review {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.write-review:hover {
+    background-color: #0056b3;
+}
+
+.overview {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: white;    
+    width: 84%;
+    margin-left: 100px;
+    padding-bottom: 50px;
+    margin-bottom: 100px;
+}
+
+.details p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.details a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.details a:hover {
+    text-decoration: underline;
+}
+
+.warning {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.caution-list {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.caution-list li {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.tabs a.active {
+    border-bottom: 2px solid #589CF1;
+    color: #589CF1;
+}
+.tabs a {
+    padding: 10px 20px;
+    color: black;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+}
+.company-details .content{
+    width: 85%;
+}

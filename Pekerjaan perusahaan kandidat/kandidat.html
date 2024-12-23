@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kandidat</title>
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <h1><span class="highlight">Seek</span> Employer</h1>
+        <ul class="nav-list">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Pekerjaan</a></li>
+            <li><a href="#">Produk</a></li>
+            <li><a href="#">PT Adhimara</a></li>
+            <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="popup" class="popup-overlay">
+            <div class="popup-content">
+              <p>Apakah anda yakin ingin menerima calon kandidat?</p>
+              <button class="yes-btn">Ya</button>
+              <button class="no-btn">Tidak</button>
+            </div>
+          </div>
+        <div class="tabs">
+            <a href="index.html">Buka</a>
+            <a href="kandidat.html" class="active">Kandidat</a>
+        </div>
+        <div class="content">
+            <h1>Kandidat</h1>
+            <p>Cari kandidat terbaru dan sebelumnya</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Cari berdasarkan nama, jabatan, email">
+            </div>
+            <div class="candidate-list">
+                <div class="candidate-card">
+                    <h3>John Morgan</h3>
+                    <p>Staff Administrasi</p>
+                    <p style="display: flex; justify-content: space-between;">
+                        Jawaban
+                        <a href="#" style="margin-left: auto;">Lihat di sini</a>
+                      </p>
+                      <p style="display: flex; justify-content: space-between;">
+                        Profil
+                        <a href="#" style="margin-left: auto;">Lihat di sini</a>
+                      </p>
+                    <div class="candidate-actions">
+                        <button class="accept-btn">Terima</button>
+                        <button class="reject-btn">Tolak</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <button>Tentang SEEK</button> | <button>Mitra Internasional</button> | <button>Layanan Mitra</button> | 
+        <button>Keamanan</button> | <button>Syarat & Ketentuan</button> | <button>Kunjungi Kami</button> | 
+        <button>Pusat Bantuan</button> | <button>Workers Union</button>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
