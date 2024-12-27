@@ -53,21 +53,34 @@ class PekerjaController extends Controller
         $validated = $request->validate([
             'email' => 'required|email',
         ]);
-        $response = Http::post('http://localhost:3000/api/checkemail', [
+
+        \Log::info('Validated email for checkEmail', ['email' => $validated['email']]);
+
+        $response = Http::post('http://localhost:3000/api/checkEmail', [
             'email' => $validated['email'],
+        ]);
+        
+        \Log::info('Response from Node.js API', [
+            'status' => $response->status(),
+            'body' => $response->body(),
         ]);
 
         if ($response->successful()) {
-            $data = $response->json();
-
-            if ($data['exists'] ?? false) {
-                return back()->withErrors(['email' => 'Email already exists. Please use a different email.']);
+            $rawBody = $response->body();
+            \Log::info('Raw response body', ['rawBody' => $rawBody]);
+        
+            $data = json_decode($rawBody, true); 
+        
+            if (empty($data['data'])) { 
+                return response()->json(['exists' => false, 'message' => 'Email is available.'], 200);
             }
-            return redirect()->route('workersunion.pekerjastore')->with('success', 'Email is valid and can be used.');
-        } else {
-            return back()->withErrors('Unable to create pekerja.');
+            return response()->json(['exists' => true, 'message' => 'Email already exists.'], 200);
         }
+        
+
+        return response()->json(['success' => false, 'message' => 'Failed to check email.'], 500);
     }
+
     public function loginIndex()
     {
         $response = Http::get($this->nodeApiBaseUrl);

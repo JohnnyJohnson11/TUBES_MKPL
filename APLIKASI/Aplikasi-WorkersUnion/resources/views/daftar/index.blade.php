@@ -31,7 +31,7 @@
     @csrf 
     
     <a href="#" class="facebook-btn">
-      <img src="./images/FacebookIcon.png" alt="Facebook"> Masuk dengan Facebook
+      <img src="{{ asset('images/FacebookIcon.png') }}" alt="Facebook"> Masuk dengan Facebook
     </a>
 
     <p class="privacy-notice">Kami tidak akan mengunggah apapun tanpa izin dari Anda</p>
@@ -73,7 +73,7 @@
     <button type="submit" id="register" class="login-btn">Daftar</button>
   </form>
   <div class="footer">
-    Sudah punya akun? <a href="./Halaman login.html">Masuk</a><br>
+    Sudah punya akun? <a href="{{ route('workersunion.loginIndex') }}">Masuk</a><br>
     <p>Dengan memilih "Daftar Sekarang", saya telah membaca dan menyetujui Persyaratan Penggunaan WorkersUnion.com dan Kebijakan Privasi</p>
   </div>
 </div>
@@ -108,76 +108,60 @@
         }   
     }
     function buttonClicked(event) {
-      event.preventDefault();
-      var namaDepan=document.getElementById("namaDepan");
-      var namaDepanValue=namaDepan.value;
+    event.preventDefault();
 
-      var namaBelakang=document.getElementById("namaBelakang");
-      var namaBelakangValue=namaBelakang.value;
+    var namaDepan = document.getElementById("namaDepan").value;
+    var namaBelakang = document.getElementById("namaBelakang").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
 
-      var email = document.getElementById("email");
-      var emailValue = email.value;
-      var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      var messageContainer = document.getElementById("message-container");
-      messageContainer.innerHTML='';
+    var messageContainer = document.getElementById("message-container");
+    var messageContainerPW = document.getElementById("message-container-PW");
 
-      var password = document.getElementById("password");
-      var passwordValue = password.value;
-      var hasUppercase = /[A-Z]/.test(passwordValue);
-      var hasLowercase = /[a-z]/.test(passwordValue);
-      var hasNumber = /[0-9]/.test(passwordValue);
-      var messageContainerPW = document.getElementById("message-container-PW");
+    let isValid = true;
+    messageContainer.innerHTML = '';
+    messageContainerPW.innerHTML = '';
 
-      let isValid=true;
-      messageContainerPW.innerHTML='';
+    // Perform the client-side validation without modifying your existing logic
+    if (namaDepan.trim() === '' || namaBelakang.trim() === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        if (namaDepan.trim() === '') {
+            document.getElementById("namaDepan").style.border = '1px solid #FF0000';
+        }
+        if (namaBelakang.trim() === '') {
+            document.getElementById("namaBelakang").style.border = '1px solid #FF0000';
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById("email").style.border = '1px solid #FF0000';
+            var failMessage = document.createElement("p");
+            failMessage.textContent = "Masukkan Email yang Valid";
+            failMessage.style.color = "#FF0000";
+            failMessage.style.fontSize = "10px";
+            messageContainer.appendChild(failMessage);
+        }
+        if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+            document.getElementById("password").style.border = '1px solid #FF0000';
+            var failMessagePW = document.createElement("p");
+            failMessagePW.textContent = "Password tidak memenuhi syarat";
+            failMessagePW.style.color = "#FF0000";
+            failMessagePW.style.fontSize = "10px";
+            messageContainerPW.appendChild(failMessagePW);
+        }
+        isValid = false;
+    }
 
-      if (namaDepanValue.length===0 || namaBelakangValue.length=== 0 || !(passwordValue.length > 8 && hasUppercase && hasLowercase && hasNumber) || !emailPattern.test(emailValue)){
-          isValid=false;
-          if (namaDepanValue.length===0){
-              namaDepan.style.border='1px solid #FF0000';
-          }
-          if (namaBelakangValue.length===0){
-              namaBelakang.style.border='1px solid #FF0000';
-          }
-          if(!emailPattern.test(emailValue)){
-              email.style.border='1px solid #FF0000';
-              var failMessage = document.createElement("p");
-              failMessage.textContent = "Masukkan Email yang Valid"; 
-              failMessage.style.color = "#FF0000";
-              failMessage.style.fontSize ="10px"
-              messageContainer.appendChild(failMessage);
-          }
-          if (!(passwordValue.length > 8 && hasUppercase && hasLowercase && hasNumber)) {
-              password.style.border='1px solid #FF0000';
-              var failMessagePW = document.createElement("p");
-              failMessagePW.textContent = "Password tidak memenuhi syarat"; 
-              failMessagePW.style.color = "#FF0000";
-              failMessagePW.style.fontSize ="10px"
-              messageContainerPW.appendChild(failMessagePW);
-          }
-      } 
+    if (!isValid) {
+        return; // Stop if client-side validation fails
+    }
 
-
-
-      if (!isValid) {
-          return; 
-      }
-
-      const formData = {
-    namaDepan: namaDepanValue,
-    namaBelakang: namaBelakangValue,
-    email: emailValue,
-    password: passwordValue,
-};
-
-fetch('{{ route("workersunion.storePekerja") }}', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-    },
-    body: JSON.stringify(formData),
-})
+    // Check email existence via server-side
+    fetch('{{ route("workersunion.checkEmail") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify({ email }),
+    })
     .then((response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -185,18 +169,56 @@ fetch('{{ route("workersunion.storePekerja") }}', {
         return response.json();
     })
     .then((data) => {
-        if (data.success) {
-            alert(data.message); // Handle success
-        } else {
-            alert('Error: ' + data.message); // Handle validation error
+        if (data.exists) {
+            document.getElementById("email").style.border = '1px solid #FF0000';
+            var failMessage = document.createElement("p");
+            failMessage.textContent = "Email telah terdaftar";
+            failMessage.style.color = "#FF0000";
+            failMessage.style.fontSize = "10px";
+            messageContainer.appendChild(failMessage);
+            return; 
         }
+
+        const formData = {
+            namaDepan,
+            namaBelakang,
+            email,
+            password,
+        };
+
+        fetch('{{ route("workersunion.storePekerja") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: JSON.stringify(formData),
+            console.log('Raw response:', response);
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.success) {
+                alert(data.message); 
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error submitting form:', error);
+            alert('An error occurred while submitting the form.');
+        });
     })
     .catch((error) => {
-        console.error('Error submitting form:', error);
-        alert('An error occurred while submitting the form.');
+        console.error('Error checking email:', error);
+        alert('An error occurred while checking the email.');
     });
+}
 
-    };
     function textFieldClicked(){
         namaDepan.style.border='1px solid #ccc';
         namaBelakang.style.border='1px solid #ccc';

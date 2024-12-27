@@ -27,7 +27,7 @@
   <div class="subtitle">Temukan Lowongan Sesuai Gaji Anda</div>
 
   <a href="#" class="facebook-btn">
-    <img src="./images/FacebookIcon.png" alt="Facebook"> Masuk dengan Facebook
+    <img src="{{ asset('images/FacebookIcon.png') }}" alt="Facebook"> Masuk dengan Facebook
   </a>
 
   <p class="privacy-notice">Kami tidak akan mengunggah apapun tanpa izin dari Anda</p>
@@ -44,7 +44,7 @@
     <label for="password">Password</label>
     <input type="password" id="password" placeholder="Password" style="
     padding-right: 30px;">
-    <span><img id="eyeIcon"src="./images/PW_show.png" style="position:absolute;width:22px;right: 6px;bottom: 12px;"></span> 
+    <span><img id="eyeIcon"src="{{ asset('images/PW_show.png') }}" style="position:absolute;width:22px;right: 6px;bottom: 12px;"></span> 
   </div>
   <div id="message-container-PW" style="margin-bottom: 13px; margin-top: 2px;"></div>
   <div class="checkbox-group">
@@ -55,7 +55,7 @@
   <button class="login-btn" id="login">Masuk</button>
   
   <div class="footer">
-    Pengguna baru? <a href="./Halaman Daftar.html">Daftar</a><br>
+    Pengguna baru? <a href="{{ route('workersunion.daftarIndex') }}">Daftar</a><br>
     <p>Dengan Terhubung ke Facebook, Saya telah membaca dan menyetujui Ketentuan Penggunaan dan Kebijakan Privasi Workers Union.com</p>
   </div>
 </div>
@@ -79,7 +79,7 @@
         failMessage.style.color = "#FF0000";
         failMessage.style.fontSize ="10px"
         messageContainer.appendChild(failMessage);
-        warningSign.src="./images/warning.png";
+        warningSign.src="{{ asset('images/warning.png') }}";
       } 
       if(inputValue.length===0){
         input.style.border='1px solid #FF0000';
@@ -105,10 +105,10 @@
     var passwordInput = document.getElementById("password");
     if(passwordInput.type==="text"){
       passwordInput.type = "password";
-      this.src="./images/PW_show.png";
+      this.src="{{ asset('images/PW_show.png') }}";
     }else{
       passwordInput.type = "text";
-      this.src="./images/PW_hide.png";
+      this.src="{{ asset('images/PW_hide.png') }}";
     }
   }
   function PasswordClicked(){
