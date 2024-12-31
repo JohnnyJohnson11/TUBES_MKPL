@@ -110,10 +110,10 @@
     function buttonClicked(event) {
     event.preventDefault();
 
-    var namaDepan = document.getElementById("namaDepan").value;
-    var namaBelakang = document.getElementById("namaBelakang").value;
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
+    var namaDepan = document.getElementById("namaDepan").value.trim();
+    var namaBelakang = document.getElementById("namaBelakang").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var password = document.getElementById("password").value.trim();
 
     var messageContainer = document.getElementById("message-container");
     var messageContainerPW = document.getElementById("message-container-PW");
@@ -122,12 +122,11 @@
     messageContainer.innerHTML = '';
     messageContainerPW.innerHTML = '';
 
-    // Perform the client-side validation without modifying your existing logic
-    if (namaDepan.trim() === '' || namaBelakang.trim() === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
-        if (namaDepan.trim() === '') {
+    if (namaDepan === '' || namaBelakang === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        if (namaDepan === '') {
             document.getElementById("namaDepan").style.border = '1px solid #FF0000';
         }
-        if (namaBelakang.trim() === '') {
+        if (namaBelakang === '') {
             document.getElementById("namaBelakang").style.border = '1px solid #FF0000';
         }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -150,17 +149,16 @@
     }
 
     if (!isValid) {
-        return; // Stop if client-side validation fails
+        return;
     }
-
-    // Check email existence via server-side
+    const emailData = { email };
     fetch('{{ route("workersunion.checkEmail") }}', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(emailData),
     })
     .then((response) => {
         if (!response.ok) {
@@ -170,53 +168,23 @@
     })
     .then((data) => {
         if (data.exists) {
+            // Handle existing email case
             document.getElementById("email").style.border = '1px solid #FF0000';
             var failMessage = document.createElement("p");
             failMessage.textContent = "Email telah terdaftar";
             failMessage.style.color = "#FF0000";
             failMessage.style.fontSize = "10px";
             messageContainer.appendChild(failMessage);
-            return; 
+            return;
         }
 
-        const formData = {
-            namaDepan,
-            namaBelakang,
-            email,
-            password,
-        };
-
-        fetch('{{ route("workersunion.storePekerja") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            },
-            body: JSON.stringify(formData),
-            console.log('Raw response:', response);
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.success) {
-                alert(data.message); 
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Error submitting form:', error);
-            alert('An error occurred while submitting the form.');
-        });
+        // If email is available, submit the form
+        document.getElementById("registerForm").submit(); // Submit the form normally
     })
     .catch((error) => {
-        console.error('Error checking email:', error);
-        alert('An error occurred while checking the email.');
+        console.error('There was a problem with the fetch operation:', error);
     });
+    
 }
 
     function textFieldClicked(){
