@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Log;
 class PekerjaController extends Controller
 {
     private $nodeApiBaseUrl = 'http://localhost:3000/api';
+    public function halamanUtamaIndex()
+    {
+        session()->forget('idPekerja');
+        return view('halaman_utama.index');
+    }
     public function daftarIndex()
     {
         $response = Http::get($this->nodeApiBaseUrl);
@@ -391,6 +396,109 @@ class PekerjaController extends Controller
                 'success' => false,
                 'message' => 'An error occurred while fetching skills.',
             ], 500);
+        }
+    }
+
+    public function addBahasa(Request $request)
+    {
+        $validated = $request->validate([
+            'bahasa' => 'required|string',
+        ]);
+
+        Log::info('Incoming request data', $validated);
+
+        $response = Http::post('http://localhost:3000/api/addBahasa', array_merge($validated, [
+            'idPekerja' => session('idPekerja'),
+        ]));
+
+        if ($response->successful()) {
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Informasi pendidikan added successfully!',
+            ]);
+        } else {
+            Log::error('Failed to add informasi bahasa', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to add informasi bahasa.',
+            ], 400);
+        }
+    }
+
+    public function uploadResume(Request $request)
+    {
+        $validated = $request->validate([
+            'resume' => 'required|string',
+            'namaResume' => 'required|string',
+        ]);
+
+        $response = Http::post('http://localhost:3000/api/uploadResume', [
+            'idPekerja' => session('idPekerja'), 
+            'resume' => $validated['resume'],
+            'namaResume' => $validated['namaResume'],
+        ]);
+
+        if ($response->successful()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'File uploaded successfully via Node.js!',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to upload file via Node.js.',
+            ], 400);
+        }
+    }
+    public function halamanUtamaPerusahaanIndex()
+    {
+        return view('halaman_utama_perusahaan.index');
+    }
+    public function lihatPekerjaan()
+    {
+        try {
+            // Fetch perusahaan and pekerjaan data
+            $perusahaanResponse = Http::get("http://localhost:3000/api/getPerusahaanAndPekerjaan");
+            $pekerjaandisplay = [];
+            if ($perusahaanResponse->successful()) {
+                $pekerjaandisplay = $perusahaanResponse->json()['pekerjaans'] ?? [];
+            } else {
+                Log::error('Failed to fetch perusahaan and pekerjaan data from API.', [
+                    'status' => $perusahaanResponse->status(),
+                    'response' => $perusahaanResponse->body(),
+                ]);
+            }
+    
+            // Fetch pekerja data
+            $pekerjaResponse = Http::post('http://localhost:3000/api/getDataPekerja', [
+                'idPekerja' => session('idPekerja')
+            ]);
+            $pekerjas = null;
+            if ($pekerjaResponse->successful()) {
+                $data = $pekerjaResponse->json();
+                $pekerjas = $data['data'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch pekerja data from API.', [
+                    'status' => $pekerjaResponse->status(),
+                    'response' => $pekerjaResponse->body(),
+                ]);
+            }
+    
+            // Return the view with combined data
+            return view('lihatPekerjaan.index', [
+                'pekerjaandisplay' => $pekerjaandisplay,
+                'pekerjas' => $pekerjas,
+            ]);
+    
+        } catch (\Exception $e) {
+            Log::error("Error fetching combined data: " . $e->getMessage());
+    
+            return redirect()->back()->withErrors('An error occurred while fetching combined data.');
         }
     }
 }

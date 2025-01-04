@@ -186,7 +186,7 @@ class pekerjaModel {
         });
   }
   static getSkills(idPekerja, callback) {
-    const query = "SELECT skill FROM skill WHERE idPekerja = ?";
+    const query = "SELECT * FROM skill WHERE idPekerja = ?";
     pool.query(query, [idPekerja], (error, results) => {
         if (error) {
             return callback(error, null);
@@ -204,6 +204,44 @@ class pekerjaModel {
         callback(null, results);
     });
   }  
+
+  static addBahasa(idPekerja, bahasa, callback) {
+    const query = 'UPDATE pekerja SET bahasa=? WHERE idPekerja=?;';
+    const values = [bahasa,idPekerja];
+
+    pool.query(query, values, (error, results) => {
+      if (typeof callback === 'function') {
+        if (error) {
+          return callback(error, null);
+        }
+        callback(null, results);
+      } else {
+        console.error("Callback is not a function:", callback);
+      }
+    });
+  }
+
+  static uploadResume(idPekerja, resume, namaResume, callback) {
+    const query = `
+        UPDATE pekerja 
+        SET resume = ?, namaResume=? 
+        WHERE idPekerja = ?;
+    `;
+    const values = [resume, namaResume, idPekerja];
+
+    pool.query(query, values, (error, results) => {
+        if (typeof callback === 'function') {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        } else {
+            console.error("Callback is not a function:", callback);
+        }
+    });
+  }
+
+
 }
 
 module.exports = pekerjaModel;

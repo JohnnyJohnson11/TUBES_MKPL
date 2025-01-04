@@ -14,8 +14,8 @@
         <h1><span class="highlight">Workers</span> Union</h1>
         <ul class="nav-list">
             <li><a href="#">Home</a></li>
-            <li><a href="#">Pekerjaan</a></li>
-            <li><a href="#">Perusahaan</a></li>
+            <li><a href="{{ route('workersunion.lihatPekerjaan') }}">Pekerjaan</a></li>
+            <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
             <li><a href="#">Tentang</a></li>
             <li class="user-menu">
                 <a href="#" class="username">{{$pekerjas['username']}} <span>&#9662;</span></a>
@@ -24,7 +24,7 @@
                     <a href="D:\WebPro\TUBES-WEBPRO-Muhammad-Rafi-Nadhif_1302220142\pekerjaan tersimpan\lamar.html">Pekerjaan Tersimpan</a>
                     <a href="#">Lamaran Kerja</a>
                     <a href="#">Pengaturan</a>
-                    <a href="D:\WebPro\TUBES_WEBPRO bagian sean_1302220069\Halaman login.html">Keluar</a>
+                    <a href="{{ route('workersunion.halamanUtama') }}">Keluar</a>
                 </div>
             </li>
             <li><button class="post-job-btn">+ Posting Pekerjaan</button></li>

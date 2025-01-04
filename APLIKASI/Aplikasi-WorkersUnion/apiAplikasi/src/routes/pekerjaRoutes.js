@@ -14,5 +14,8 @@ router.post('/addInformasiLisensi', pekerjaController.addInformasiLisensi);
 router.post('/addSkills', pekerjaController.addSkills);
 router.post('/getSkills', pekerjaController.getSkills);
 router.post('/deleteSkills',pekerjaController.deleteSkills);
+//bahasa
+router.post('/addBahasa', pekerjaController.addBahasa);
+router.post('/uploadResume', pekerjaController.uploadResume);
 
 module.exports = router;

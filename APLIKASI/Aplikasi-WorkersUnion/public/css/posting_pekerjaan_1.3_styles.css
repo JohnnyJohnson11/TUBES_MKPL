@@ -1,0 +1,262 @@
+/* === Default Style dan Font === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+/* === Navbar === */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #a75d5d;
+  padding: 10px 20px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h1 .highlight {
+  background-color: #fc766a;
+  color: #ffffff;
+  padding: 2px;
+}
+
+.navbar h1 {
+  color: #fc766a;
+  font-size: 24px;
+  margin: 0;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.nav-list li {
+  margin: 0 15px;
+}
+
+.nav-list a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.nav-list a:hover {
+  color: #f28b5f;
+}
+
+.post-job-btn {
+  background-color: #783937;
+  color: #fff;
+  padding: 5px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.post-job-btn:hover {
+  background-color: #5a2827;
+}
+
+/* === Container Utama === */
+.container {
+  flex: 1 0 auto;
+  max-width: 1280px;
+  margin: 120px auto 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* === Stepper Navigation === */
+.stepper {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step span {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #d3d3d3;
+  border-radius: 50%;
+  line-height: 30px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}
+
+.step.completed span {
+  background-color: #007bff;
+  content: "\\2713"; /* Checkmark */
+  color: white;
+}
+
+.step.active span {
+  background-color: #007bff;
+}
+
+.progress-line {
+  height: 2px;
+  width: 250px;
+  background-color: #d3d3d3;
+  margin: 0 10px;
+  position: relative;
+  top: 15px;
+}
+
+.stepper .step.completed + .progress-line {
+  background-color: #007bff;
+}
+
+/* === Form Lowongan === */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.upload-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.upload-logo .logo-upload-box {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* === Gambar Branding === */
+.logo-preview {
+  width: 550px; /* Ubah ukuran sesuai keinginan Anda */
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* Tombol "Tambah Logo" */
+.add_logo {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.add_logo:hover {
+  background-color: #0056b3;
+}
+
+/* === Deskripsi Pekerjaan === */
+.job-description textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  resize: none;
+}
+
+/* === Video Input === */
+.video-section input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* === Tombol Berikutnya === */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-next {
+  padding: 10px 30px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-next:hover {
+  background-color: #0056b3;
+}
+
+/* === Footer === */
+.footer {
+  background-color: #d9d9d9;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.footer a {
+  color: #333;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .progress-line {
+    width: 150px;
+  }
+
+  .step span {
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .logo-preview {
+    width: 300px; /* Ukuran gambar lebih kecil untuk layar kecil */
+  }
+}

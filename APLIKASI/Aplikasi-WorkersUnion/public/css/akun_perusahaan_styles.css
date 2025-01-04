@@ -1,0 +1,256 @@
+/* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #a75d5d;
+  padding: 10px 20px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h1 .highlight {
+  background-color: #fc766a;
+  color: #ffffff;
+  padding: 2px;
+}
+
+.navbar h1 {
+  color: #fc766a;
+  font-size: 24px;
+  margin: 0;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.nav-list li {
+  margin: 0 15px;
+}
+
+.nav-list a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s;
+}
+
+.nav-list a:hover {
+  color: #f28b5f;
+}
+
+.post-job-btn {
+  background-color: #783937;
+  color: #fff;
+  padding: 5px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.post-job-btn:hover {
+  background-color: #5a2827;
+}
+
+/* Main Section */
+main {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 55px;
+  margin-bottom: 20px;
+}
+
+/* Cards */
+.card {
+  position: relative;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.card-header img.icon {
+  width: 75px;
+  height: 75px;
+  margin-right: 15px;
+}
+
+.card-title {
+  flex-grow: 1;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  margin-bottom: 35px;
+}
+
+.card-content {
+  margin-top: -40px;
+  margin-left: 90px;
+}
+
+.card-content p {
+  margin: 5px 0;
+}
+
+/* Links */
+.contact-link {
+  color: #277eed;
+  text-decoration: none;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+/* Buttons */
+.edit-link {
+  position: absolute;
+  color: #277eed;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  right: 20px;
+}
+
+.edit-link:hover {
+  text-decoration: underline;
+}
+
+.edit-personal-email {
+  top: 73px;
+}
+
+.edit-perusahaan-kontak {
+  top: 33px;
+}
+
+.edit-perusahaan-alamat {
+  top: 33px;
+}
+
+.edit-penagihan-alamat {
+  top: 92px;
+  right: 40px;
+}
+
+.edit-penagihan-email {
+  right: 40px;
+  top: 161px;
+}
+
+.contact-section,
+.address-section {
+  position: relative;
+}
+
+.contact-section p,
+.address-section p {
+  margin: 5px 0;
+}
+
+.new-account-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.new-account-btn {
+  background-color: #277eed;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.new-account-btn:hover {
+  background-color: #1a5bbb;
+}
+
+/* Footer */
+.footer {
+  background-color: #d9d9d9;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.footer a {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.save-input{
+background-color: #277eed;
+color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.profile-input{
+	width: 50%;
+    padding: 5px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}

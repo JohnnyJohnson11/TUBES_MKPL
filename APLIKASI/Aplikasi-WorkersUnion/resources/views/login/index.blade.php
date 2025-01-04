@@ -15,7 +15,7 @@
   <ul class="nav-list">
     <li><a href="#">Home</a></li>
     <li><a href="#">Pekerjaan</a></li>
-    <li><a href="#">Perusahaan</a></li>
+    <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
     <li><a href="#">Tentang</a></li>
     <li><a href="#" class="masuk">Masuk</a></li>
     <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>

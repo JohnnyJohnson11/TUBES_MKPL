@@ -15,9 +15,9 @@
     <nav class="navbar">
         <h1><span class="highlight">Workers</span> Union</h1>
         <ul class="nav-list">
-            <li><a href="#">Home</a></li>
+            <li><a href="{{ route('workersunion.homePage') }}">Home</a></li>
             <li><a href="#">Pekerjaan</a></li>
-            <li><a href="#">Perusahaan</a></li>
+            <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
             <li><a href="#">Tentang</a></li>
             <li><a href="#" class="masuk">{{$pekerjas['username']}}</a></li>
             <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
@@ -359,15 +359,18 @@
 
             <div class="section">
                 <h3>Bahasa</h3>
+                @if ($pekerjas['ringkasan']==null)
                 <p id="ifnullbahasa">Tambahkan bahasa untuk menarik lebih banyak perusahaan dan pemberi kerja.</p>
-                <p id="bahasa"></p>
+                @else
+                    <p id="bahasa">{{$pekerjas['bahasa']}}</p>
+                @endif
                 <button class="add-button" id="tambahbahasa">Tambah Bahasa</button>
             </div>
 
             <div class="section">
                 <h3>Resume atau CV</h3>
                 <p>Unggah resume atau CV agar mudah melamar dan mengakses di mana pun Anda berada.</p>
-                <p id="resumefile"></p>
+                <p id="resumefile">{{$pekerjas['namaResume']}}</p>
                 <button class="add-button" id="tambahresume">Tambah Resume atau CV</button>
             </div>
         </section>
@@ -800,28 +803,40 @@ document.getElementById("batalbahasa").addEventListener("click", function() {
 });
 
 document.getElementById("simpanbahasabutton").addEventListener("click", function() {
-  var summarybahasaText = document.getElementById("summarybahasa").value;
+  event.preventDefault(); 
+  const bahasaText = document.getElementById("summarybahasa").value.trim();
 
-  if (summarybahasaText.trim() === "") {
-      alert("Data tidak boleh kosong.");
+  if (bahasaText === "") {
+      alert("Bahasa tidak boleh kosong.");
       return;
   }
 
-  document.getElementById("ifnullbahasa").innerHTML = "";
-  document.getElementById("bahasa").innerHTML = summarybahasaText;
-  
-  var existingSummary = summarySection.querySelector("p.summary-text");
-  if (existingSummary) {
-      existingSummary.innerHTML = summaryText; 
-  } else {
-      var newSummary = document.createElement("p");
-      newSummary.innerHTML = summaryText; 
-      newSummary.classList.add("summary-text");
-      content.innerHTML = ""; 
-      summarySection.insertBefore(newSummary, summarySection.querySelector(".add-button"));
-  }
-  document.getElementById("popup").classList.remove("active");
-  document.getElementById("summary").value = ""; 
+  fetch('{{ route("workersunion.addBahasa") }}', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+      },
+      body: JSON.stringify({ bahasa: bahasaText }),
+  })
+  .then((response) => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+  })
+  .then((data) => {
+      if (data.success) {
+          const bahasaElement = document.getElementById("bahasa");
+          bahasaElement.textContent = bahasaText;
+          document.getElementById("popupbahasa").classList.remove("active");
+      } else {
+          alert('Error: ' + data.message);
+      }
+  })
+  .catch((error) => {
+      console.error('There was a problem with the fetch operation:', error);
+  });
 });
 
 document.getElementById("tambahresume").addEventListener("click", function() {
@@ -921,41 +936,54 @@ function removeFile(event) {
 }
 
 document.getElementById("simpanresumebutton").addEventListener("click", function () {
-  const uploadedFilesContainer = document.getElementById("file-list"); 
-  const mainResumeContainer = document.getElementById("resumefile");   
+    const fileInput = document.getElementById("file-input"); // Assume this is the file input element
+    const file = fileInput.files[0]; // Get the first selected file
 
+    if (!file) {
+        alert("No file selected!");
+        return;
+    }
 
-  mainResumeContainer.innerHTML = "";
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const fileData = event.target.result; // Base64 string or binary data
+        const fileName = file.name;
 
+        fetch('{{ route("workersunion.uploadResume") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            },
+            body: JSON.stringify({
+                resume: fileData, 
+                namaResume: fileName,
+            }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (data.success) {
+                  const resumeElement = document.getElementById("resumefile");
+                  resumeElement.textContent = fileName;
+                  document.getElementById("popupresume").classList.remove("active");
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            })
+            .catch((error) => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    };
 
-  const fileItems = uploadedFilesContainer.querySelectorAll(".file-item");
-
-  if (fileItems.length === 0) {
-      const message = document.createElement("p");
-      message.className = "note";
-      message.textContent = "Tidak ada resume yang ditambahkan";
-      mainResumeContainer.appendChild(message);
-      return;
-  }
-
-
-  fileItems.forEach(function (fileItem) {
-      const fileName = fileItem.querySelector("span").textContent; // 
-
-      const fileDisplay = document.createElement("p");
-      fileDisplay.className = "uploaded-resume";
-      fileDisplay.textContent = fileName;
-
-      mainResumeContainer.appendChild(fileDisplay);
-  });
-
-  document.getElementById("popupresume").classList.remove("active");
-
-  const noResumeMessage = document.getElementById("noResumeMessage");
-  if (noResumeMessage) {
-      noResumeMessage.remove();
-  }
+    // Read file as a data URL (Base64 string)
+    reader.readAsDataURL(file);
 });
+
 
 document.getElementById("ubahinformasipribadi").addEventListener("click", function() {
   document.getElementById("popupinformasipribadi").classList.add("active");
@@ -1037,8 +1065,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 });
 document.getElementById("hapuskeahlian").addEventListener("click", function () {
-  
-
   fetch('{{ route("workersunion.deleteSkills") }}', {
     method: "POST",
     headers: {

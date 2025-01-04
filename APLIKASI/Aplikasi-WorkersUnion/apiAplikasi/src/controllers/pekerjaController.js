@@ -1,8 +1,6 @@
 const PekerjaModel = require("../models/pekerjaModel");
 const ResponseHandler = require("../utils/responseHandler");
 
-
-
 class pekerjaController {
   static createPekerja(req, res) {
     const { username, email, password } = req.body;
@@ -205,6 +203,63 @@ class pekerjaController {
     }
   }
 
+  static async addBahasa(req, res) {
+    const { idPekerja, bahasa } = req.body;
+
+    try {
+        PekerjaModel.addBahasa(idPekerja, bahasa, (error, results) => {
+            if (error) {
+                console.error(error);
+                return ResponseHandler.error(res, 500, "Failed to save bahasas");
+            }
+            return ResponseHandler.sukses(res, 200, "Bahasas saved successfully");
+        });
+    } catch (error) {
+        console.error(error);
+        return ResponseHandler.error(res, 500, "Unexpected error occurred");
+    }
+  }
+
+  static async uploadResume(req, res) {
+    const { idPekerja, resume, namaResume } = req.body;
+
+    // Validate input
+    if (!idPekerja || !resume ||!namaResume) {
+        return res.status(400).json({
+            success: false,
+            message: "Missing required fields.",
+        });
+    }
+
+    try {
+
+        PekerjaModel.uploadResume(idPekerja, resume, namaResume, (error, result) => {
+            if (error) {
+                console.error("Database Error:", error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Database error occurred.",
+                });
+            }
+
+            // Respond with success
+            return res.status(200).json({
+                success: true,
+                message: "File uploaded successfully!",
+                data: result,
+            });
+        });
+    } catch (error) {
+        console.error("Error in uploadResume:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An unexpected error occurred.",
+        });
+    }
+  }
+
+
+  
 }
 
 module.exports = pekerjaController;

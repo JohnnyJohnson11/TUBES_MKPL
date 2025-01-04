@@ -1,0 +1,148 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;}
+html, body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f3f3;
+    margin: 0; 
+    flex-direction: column;}
+
+    .navbar {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #A75D5D; 
+    padding: 10px 20px; 
+    width: 100%; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    position: absolute;
+    }
+    .navbar h1 .highlight{
+    background-color: #FC766A;
+    color:#FFFFFF;
+    padding: 2px;
+    }
+    .navbar h1{
+    color:#FC766A;
+    }
+    .nav-list {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0; 
+    }
+
+    .nav-list li {
+    margin: 0 15px; 
+    }
+
+    .nav-list a {
+    color: #fff; 
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+    }
+
+    .post-job-btn {
+    background-color: #783937;
+    padding: 15px;
+    }
+    /* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f3f3;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    width: 400px; /* Fixed width */
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 100px auto; /* Center container horizontally */
+    
+}
+
+.form-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.privacy-notice {
+    font-size: 12px;
+    color: #666;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    color: #666;
+    margin: 20px 0;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.divider span {
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkbox-group input {
+    margin-right: 10px;
+}
+
+.login-btn {
+    background-color: #F1AC88; /* Button color for login */
+    color: #fff;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
