@@ -42,3 +42,11 @@ Route::get('/akunPerusahaanIndex',[PerusahaanController::class, 'akunPerusahaanI
 Route::post('/updatePerusahaan',[PerusahaanController::class, 'updatePerusahaan'])->name('workersunion.updatePerusahaan');
 Route::get('/lihatPekerjaan',[PekerjaController::class,'lihatPekerjaan'])->name('workersunion.lihatPekerjaan');
 Route::post('/getPekerjaanById',[PerusahaanController::class, 'getPekerjaanById'])->name('workersunion.getPekerjaanById');
+Route::post('/storeJobSession', [PerusahaanController::class, 'storeJobSession'])->name('workersunion.storeJobSession');
+Route::get('/halamanResume',[PerusahaanController::class,'halamanResume'])->name('workersunion.halamanResume');
+Route::post('/lamarPekerjaanStorePage1',[PekerjaController::class, 'lamarPekerjaanStorePage1'])->name('workersunion.lamarPekerjaanStorePage1');
+Route::get('/lamarPekerjaanPage2',[PekerjaController::class,'lamarPekerjaanPage2'])->name('workersunion.lamarPekerjaanPage2');
+Route::get('/lamarPekerjaanPage3',[PekerjaController::class,'lamarPekerjaanPage3'])->name('workersunion.lamarPekerjaanPage3');
+Route::post('/updatePekerja',[PekerjaController::class, 'updatePekerja'])->name('workersunion.updatePekerja');
+Route::post('/createLamaran',[PekerjaController::class, 'createLamaran'])->name('workersunion.createLamaran');
+Route::get('/lamarPekerjaanPage4',[PekerjaController::class,'lamarPekerjaanPage4'])->name('workersunion.lamarPekerjaanPage4');

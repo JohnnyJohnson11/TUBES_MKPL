@@ -28,7 +28,7 @@ class PekerjaController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        $response = Http::post('http://localhost:3000/api', [
+        $response = Http::post('http://localhost:3000/api/', [
             'username' => $validated['namaDepan'] . ' ' . $validated['namaBelakang'],
             'email' => $validated['email'],
             'password' => $validated['password'],
@@ -146,7 +146,7 @@ class PekerjaController extends Controller
         ], $response->status());
     }
     
-
+    
 
     public function homeIndex()
     {
@@ -501,4 +501,222 @@ class PekerjaController extends Controller
             return redirect()->back()->withErrors('An error occurred while fetching combined data.');
         }
     }
+    public function lamarPekerjaanStorePage1(Request $request){
+        $validated = $request->validate([
+            'answersString' => 'required|string',
+        ]);
+    
+        session()->put('lamarPekerjaanPage1', $validated);
+    
+        if (session()->has('lamarPekerjaanPage1')) {
+            Log::info('Session data for Page 1 stored:', session('lamarPekerjaanPage1'));
+            return response()->json([
+                'success' => true,
+                'message' => 'Data successfully stored in session.',
+                'redirect' => route('workersunion.lamarPekerjaanPage2'),
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to store data in session.',
+            ], 500);
+        }
+    }
+    public function lamarPekerjaanPage2()
+    {
+        try {
+            // Fetch perusahaan and pekerjaan data
+            $pekerjaanResponse = Http::post('http://localhost:3000/api/getPekerjaanAndPerusahaanById', [
+                'idPekerjaan' => session('idPekerjaan')
+            ]);
+            $pekerjaan = [];
+            if ($pekerjaanResponse->successful()) {
+                $data = $pekerjaanResponse->json();
+                $pekerjaan = $data['pekerjaans'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch perusahaan and pekerjaan data from API.', [
+                    'status' => $pekerjaanResponse->status(),
+                    'response' => $pekerjaanResponse->body(),
+                ]);
+            }
+    
+            // Fetch pekerja data
+            $pekerjaResponse = Http::post('http://localhost:3000/api/getDataPekerja', [
+                'idPekerja' => session('idPekerja')
+            ]);
+            $pekerjas = null;
+            if ($pekerjaResponse->successful()) {
+                $data = $pekerjaResponse->json();
+                $pekerjas = $data['data'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch pekerja data from API.', [
+                    'status' => $pekerjaResponse->status(),
+                    'response' => $pekerjaResponse->body(),
+                ]);
+            }
+            return view('halamanResume.index2', [
+                'pekerjaan' => $pekerjaan,
+                'pekerjas' => $pekerjas,
+            ]);
+    
+        } catch (\Exception $e) {
+            Log::error("Error fetching combined data: " . $e->getMessage());
+    
+            return redirect()->back()->withErrors('An error occurred while fetching combined data.');
+        }
+    }
+
+    public function lamarPekerjaanPage3()
+    {
+        try {
+            // Fetch perusahaan and pekerjaan data
+            $pekerjaanResponse = Http::post('http://localhost:3000/api/getPekerjaanAndPerusahaanById', [
+                'idPekerjaan' => session('idPekerjaan')
+            ]);
+            $pekerjaan = [];
+            if ($pekerjaanResponse->successful()) {
+                $data = $pekerjaanResponse->json();
+                $pekerjaan = $data['pekerjaans'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch perusahaan and pekerjaan data from API.', [
+                    'status' => $pekerjaanResponse->status(),
+                    'response' => $pekerjaanResponse->body(),
+                ]);
+            }
+    
+            // Fetch pekerja data
+            $pekerjaResponse = Http::post('http://localhost:3000/api/getDataPekerja', [
+                'idPekerja' => session('idPekerja')
+            ]);
+            $pekerjas = null;
+            if ($pekerjaResponse->successful()) {
+                $data = $pekerjaResponse->json();
+                $pekerjas = $data['data'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch pekerja data from API.', [
+                    'status' => $pekerjaResponse->status(),
+                    'response' => $pekerjaResponse->body(),
+                ]);
+            }
+            return view('halamanResume.index3', [
+                'pekerjaan' => $pekerjaan,
+                'pekerjas' => $pekerjas,
+            ]);
+    
+        } catch (\Exception $e) {
+            Log::error("Error fetching combined data: " . $e->getMessage());
+    
+            return redirect()->back()->withErrors('An error occurred while fetching combined data.');
+        }
+    }
+
+    public function updatePekerja(Request $request)
+    {
+        $validated = $request->validate([
+            'username' => 'required|string',
+            'lokasi' => 'required|string',
+            'nomorHP' => 'required|string',
+            'email' => 'required|email',
+        ]);
+        $response = Http::post('http://localhost:3000/api/updatePekerja', [
+            'idPekerja' => session('idPekerja'),
+            'username' => $validated['username'],
+            'lokasi' => $validated['lokasi'],
+            'nomorHP' => $validated['nomorHP'],
+            'email' => $validated['email'],
+        ]);
+
+        if ($response->successful()) {
+            $data = json_decode($response->body(), true);
+            Log::info('Parsed response data', [
+                'data' => $data,
+            ]);
+
+            if ($data['dontExist']) {
+                return response()->json([
+                    'success' => true,
+                    'dontExist' =>true,
+                ]);
+            }
+            return response()->json([
+                'success' => true,
+                'dontExist' => false,
+            ]);
+        }
+
+        Log::error('Failed to verify credentials', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to verify credentials.',
+        ], $response->status());
+    }
+    public function createLamaran(Request $request)
+    {
+        $response = Http::post('http://localhost:3000/api/createLamaran', [
+            'idPekerja' => session('idPekerja'),
+            'idPekerjaan' => session('idPekerjaan'),
+            'jawaban' => session('lamarPekerjaanPage1')['answersString'],
+        ]);
+
+        if ($response->successful()) {
+            return response()->json([
+                'success' => true,
+                'dontExist' => false,
+                'redirect' => route('workersunion.lamarPekerjaanPage4'),
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to verify credentials.',
+        ], $response->status());
+    }
+    public function lamarPekerjaanPage4()
+    {
+        try {
+            // Fetch perusahaan and pekerjaan data
+            $pekerjaanResponse = Http::post('http://localhost:3000/api/getPekerjaanAndPerusahaanById', [
+                'idPekerjaan' => session('idPekerjaan')
+            ]);
+            $pekerjaan = [];
+            if ($pekerjaanResponse->successful()) {
+                $data = $pekerjaanResponse->json();
+                $pekerjaan = $data['pekerjaans'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch perusahaan and pekerjaan data from API.', [
+                    'status' => $pekerjaanResponse->status(),
+                    'response' => $pekerjaanResponse->body(),
+                ]);
+            }
+    
+            // Fetch pekerja data
+            $pekerjaResponse = Http::post('http://localhost:3000/api/getDataPekerja', [
+                'idPekerja' => session('idPekerja')
+            ]);
+            $pekerjas = null;
+            if ($pekerjaResponse->successful()) {
+                $data = $pekerjaResponse->json();
+                $pekerjas = $data['data'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch pekerja data from API.', [
+                    'status' => $pekerjaResponse->status(),
+                    'response' => $pekerjaResponse->body(),
+                ]);
+            }
+            return view('halamanResume.index4', [
+                'pekerjaan' => $pekerjaan,
+                'pekerjas' => $pekerjas,
+            ]);
+    
+        } catch (\Exception $e) {
+            Log::error("Error fetching combined data: " . $e->getMessage());
+    
+            return redirect()->back()->withErrors('An error occurred while fetching combined data.');
+        }
+    }
 }
+

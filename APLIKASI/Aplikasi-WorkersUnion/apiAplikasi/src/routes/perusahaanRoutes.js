@@ -12,5 +12,7 @@ router.post('/getPekerjaan', perusahaanController.getPekerjaan);
 router.post('/updatePerusahaan', perusahaanController.updatePerusahaan);
 router.get('/getPerusahaanAndPekerjaan', perusahaanController.getPerusahaanAndPekerjaan);
 router.post('/getPekerjaanById', perusahaanController.getPekerjaanById);
+router.post('/getPekerjaanAndPerusahaanById', perusahaanController.getPekerjaanAndPerusahaanById);
+
 
 module.exports = router;

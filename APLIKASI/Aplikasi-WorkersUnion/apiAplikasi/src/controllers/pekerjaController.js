@@ -1,3 +1,4 @@
+const pekerjaModel = require("../models/pekerjaModel");
 const PekerjaModel = require("../models/pekerjaModel");
 const ResponseHandler = require("../utils/responseHandler");
 
@@ -82,6 +83,50 @@ class pekerjaController {
       ResponseHandler.sukses(res, 200, pekerjas);
     });
   }
+
+  static async updatePekerja(req, res) {
+    const { idPekerja, username, lokasi, nomorHP, email } = req.body;
+
+    try {
+        // First, check if the email already exists
+        PekerjaModel.ambilPekerjaByEmail(email, (error, pekerjas) => {
+            if (error) {
+                console.error("Error fetching pekerja by email:", error);
+                return ResponseHandler.error(res, 500, "Error checking email existence.");
+            }
+
+            // If no pekerja found with the email or it's the same pekerja
+            if (!pekerjas || pekerjas.length === 0 || pekerjas[0].idPekerja === idPekerja) {
+                // Proceed to update pekerja data
+                PekerjaModel.updatePekerja(idPekerja, username, lokasi, nomorHP, email, (updateError, updatedPekerja) => {
+                    if (updateError) {
+                        console.error("Error updating pekerja:", updateError);
+                        return ResponseHandler.error(res, 500, "Error updating pekerja data.");
+                    }
+
+                    return res.status(200).json({
+                        dontExist: true,
+                        success: true,
+                        message: "Perusahaan data successfully updated.",
+                        data: updatedPekerja,
+                    });
+                });
+            } else {
+                // If email already exists for another pekerja
+                return res.status(200).json({
+                    dontExist: false,
+                    success: true,
+                    message: "Email is already associated with another pekerja.",
+                });
+            }
+        });
+    } catch (exception) {
+        console.error("Unexpected error:", exception);
+        return ResponseHandler.error(res, 500, "An unexpected error occurred.");
+    }
+}
+
+
 
   static async addInformasiPekerjaan(req,res){
     const {idPekerja, posisiPekerjaan, namaPerusahaan, tahunMulaiPekerjaan, tahunBerakhirPekerjaan, statusJabatanPekerjaan, deskripsiPekerjaan} = req.body;
@@ -258,7 +303,21 @@ class pekerjaController {
     }
   }
 
-
+  static async createLamaran(req,res){
+    const { idPekerja, idPekerjaan, jawaban} = req.body;
+    try {
+      PekerjaModel.createLamaran(idPekerja, idPekerjaan, jawaban, (error, results) => {
+          if (error) {
+              console.error(error);
+              return ResponseHandler.error(res, 500, "Failed to save bahasas");
+          }
+          return ResponseHandler.sukses(res, 200, "Bahasas saved successfully");
+      });
+    } catch (error) {
+        console.error(error);
+        return ResponseHandler.error(res, 500, "Unexpected error occurred");
+    }
+  };
   
 }
 

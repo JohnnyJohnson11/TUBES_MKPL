@@ -185,5 +185,32 @@ class perusahaanModel{
             callback(null, results);
         });
       }
+
+      static getPekerjaanAndPerusahaanById(idPekerjaan,callback){
+        const query = `SELECT 
+        pekerjaan.idPekerjaan,
+        pekerjaan.idPerusahaan,
+        pekerjaan.judulPekerjaan,
+        pekerjaan.lokasiPekerjaan,
+        pekerjaan.kategoriJabatan,
+        pekerjaan.kategoriGaji,
+        pekerjaan.jenisGaji,
+        pekerjaan.kisaranGaji,
+        CAST(pekerjaan.bannerPerusahaan AS CHAR) AS bannerPerusahaan,
+        pekerjaan.deskripsiPerusahaan,
+        pekerjaan.linkReferensi,
+        pekerjaan.pertanyaan,
+        perusahaan.namaBisnis,
+        CAST(perusahaan.logoPerusahaan AS CHAR) AS logoPerusahaan,
+        created_at 
+        FROM pekerjaan JOIN perusahaan ON pekerjaan.idPerusahaan = perusahaan.idPerusahaan WHERE pekerjaan.idPekerjaan = ?
+        `;
+        pool.query(query, [idPekerjaan], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+      }
 }
 module.exports = perusahaanModel;

@@ -119,6 +119,22 @@ class pekerjaModel {
     });
   }
 
+  static updatePekerja(idPekerja, username, lokasi, nomorHP, email, callback) {
+    const query = 'UPDATE pekerja SET username = ?, lokasi=?, nomorHP=?, email=? WHERE idPekerja=?;';
+    const values = [username, lokasi, nomorHP, email, idPekerja];
+
+    pool.query(query, values, (error, results) => {
+      if (typeof callback === 'function') {
+        if (error) {
+          return callback(error, null);
+        }
+        callback(null, results);
+      } else {
+        console.error("Callback is not a function:", callback);
+      }
+    });
+  }
+
   static addInformasiPekerjaan(idPekerja, posisiPekerjaan, namaPerusahaan, tahunMulaiPekerjaan, tahunBerakhirPekerjaan, statusJabatanPekerjaan, deskripsiPekerjaan, callback) {
     const formattedTahunMulai = `${tahunMulaiPekerjaan}-05-05`;
     const formattedTahunBerakhir = `${tahunBerakhirPekerjaan}-05-05`;
@@ -238,6 +254,22 @@ class pekerjaModel {
         } else {
             console.error("Callback is not a function:", callback);
         }
+    });
+  }
+
+  static createLamaran(idPekerja, idPekerjaan, jawaban, callback){
+    const query = 'INSERT INTO lamaran (idPekerja, idPekerjaan, jawaban) VALUES (?, ?, ?)';
+    const values = [idPekerja, idPekerjaan, jawaban];
+
+    pool.query(query, values, (error, results) => {
+      if (typeof callback === 'function') {
+        if (error) {
+          return callback(error, null);
+        }
+        callback(null, results);
+      } else {
+        console.error("Callback is not a function:", callback);
+      }
     });
   }
 

@@ -192,5 +192,36 @@ class perusahaanController{
             });
         }
       }
+      static async getPekerjaanAndPerusahaanById(req, res) {
+        const { idPekerjaan } = req.body;
+        if (!idPekerjaan) {
+            return res.status(400).json({
+                success: false,
+                message: "idPekerja is required.",
+            });
+        }
+        try {
+            PerusahaanModel.getPekerjaanAndPerusahaanById(idPekerjaan, (error, results) => {
+                if (error) {
+                    console.error("Error fetching skills:", error);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Failed to fetch skills.",
+                    });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    pekerjaans: results,
+                });
+            });
+        } catch (error) {
+            console.error("Unexpected error:", error);
+            return res.status(500).json({
+                success: false,
+                message: "An unexpected error occurred.",
+            });
+        }
+      }
 }
 module.exports = perusahaanController;

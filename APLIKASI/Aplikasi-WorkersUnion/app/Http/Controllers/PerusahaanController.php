@@ -451,5 +451,63 @@ public function postingPekerjaanStorePage4(Request $request)
         }
     }
 
+    public function storeJobSession(Request $request)
+    {
+        $validated = $request->validate([
+            'idPekerjaan' => 'required|integer',
+        ]);
+
+        // Store the job ID in the session
+        session(['idPekerjaan' => $validated['idPekerjaan']]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Job ID stored successfully.',
+        ]);
+    }
+    public function halamanResume()
+    {
+        try {
+            // Fetch perusahaan and pekerjaan data
+            $pekerjaanResponse = Http::post('http://localhost:3000/api/getPekerjaanAndPerusahaanById', [
+                'idPekerjaan' => session('idPekerjaan')
+            ]);
+            $pekerjaan = [];
+            if ($pekerjaanResponse->successful()) {
+                $data = $pekerjaanResponse->json();
+                $pekerjaan = $data['pekerjaans'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch perusahaan and pekerjaan data from API.', [
+                    'status' => $pekerjaanResponse->status(),
+                    'response' => $pekerjaanResponse->body(),
+                ]);
+            }
+    
+            // Fetch pekerja data
+            $pekerjaResponse = Http::post('http://localhost:3000/api/getDataPekerja', [
+                'idPekerja' => session('idPekerja')
+            ]);
+            $pekerjas = null;
+            if ($pekerjaResponse->successful()) {
+                $data = $pekerjaResponse->json();
+                $pekerjas = $data['data'][0] ?? null;
+            } else {
+                Log::error('Failed to fetch pekerja data from API.', [
+                    'status' => $pekerjaResponse->status(),
+                    'response' => $pekerjaResponse->body(),
+                ]);
+            }
+            return view('halamanResume.index1', [
+                'pekerjaan' => $pekerjaan,
+                'pekerjas' => $pekerjas,
+            ]);
+    
+        } catch (\Exception $e) {
+            Log::error("Error fetching combined data: " . $e->getMessage());
+    
+            return redirect()->back()->withErrors('An error occurred while fetching combined data.');
+        }
+    }
+
     
 }
