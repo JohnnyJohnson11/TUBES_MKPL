@@ -14,10 +14,9 @@
     <nav class="navbar">
         <h1><span class="highlight">Workers</span> Union</h1>
         <ul class="nav-list">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Perusahaan</a></li>
-            <li><a href="#">Tentang</a></li>
-            <li><a href="#" class="masuk">Daftar Perusahaan</a></li>
+            <li><a href="{{ route('workersunion.halamanUtama') }}">Home</a></li>
+            <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
+            <li><a href="{{route('workersunion.daftarPerusahaanIndex')}}" class="masuk">Daftar Perusahaan</a></li>
             <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
         </ul>
     </nav>

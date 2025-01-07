@@ -273,6 +273,48 @@ class pekerjaModel {
     });
   }
 
+  static getAllLamaran(callback) {
+    const query = `
+        SELECT 
+            lamaran.idLamaran, lamaran.status, lamaran.jawaban, 
+            pekerja.username, pekerja.idPekerja,
+            pekerjaan.judulPekerjaan, pekerjaan.idPekerjaan, pekerjaan.pertanyaan 
+        FROM lamaran 
+        JOIN pekerja ON lamaran.idPekerja = pekerja.idPekerja 
+        JOIN pekerjaan ON lamaran.idPekerjaan = pekerjaan.idPekerjaan
+    `;
+
+    pool.query(query, (error, results) => {
+        if (error) {
+            return callback(error, null);
+        }
+        callback(null, results);
+    });
+}
+
+static handleLamaranAction(idLamaran, action, callback) {
+    const query = `
+        UPDATE lamaran 
+        SET status = ? 
+        WHERE idLamaran = ?
+    `;
+    pool.query(query, [action, idLamaran], (error, results) => {
+        if (error) {
+            return callback(error, null);
+        }
+        callback(null, results);
+    });
+}
+
+static getResume(idPekerja,callback){
+  const query = "SELECT CAST(resume AS CHAR) AS resume FROM pekerja WHERE idPekerja = ?";
+  pool.query(query, [idPekerja], (error, results) => {
+    if (error) {
+        return callback(error, null);
+    }
+    callback(null, results);
+});
+}
 
 }
 

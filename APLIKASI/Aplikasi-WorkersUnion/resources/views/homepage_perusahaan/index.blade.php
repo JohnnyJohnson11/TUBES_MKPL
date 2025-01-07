@@ -13,8 +13,7 @@
         <h1><span class="highlight">Seek</span> Employer</h1>
         <ul class="nav-list">
           <li><a href="{{ route('workersunion.homepagePerusahaanIndex') }}">Home</a></li>
-          <li><a href="#">Pekerjaan</a></li>
-          <li><a href="#">Produk</a></li>
+          <li><a href="{{ route('workersunion.pekerjaanPerusahaan') }}">Pekerjaan</a></li>
           <li><a href="{{ route('workersunion.akunPerusahaanIndex') }}">{{$perusahaans['namaBisnis']}}</a></li> 
           <li><a href="{{ route('workersunion.postingPekerjaanPage1') }}" class="post-job-btn">+ Posting Pekerjaan</a></li>
         </ul>
@@ -52,15 +51,11 @@
                         <th>Status</th>
                         <th>Pekerjaan</th>
                         <th>Jumlah Kandidat</th>
-                        <th>Pencarian Bakat</th>
-                        <th>Kinerja</th>
                         <th>Tindakan pekerjaan</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>-</td>
-                        <td>-</td>
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
@@ -119,38 +114,45 @@
         })
         .then((data) => {
             if (data.success && data.pekerjaans) {
-                pekerjaanTableBody.innerHTML = ""; // Clear any existing rows
+                pekerjaanTableBody.innerHTML = ""; 
                 data.pekerjaans.forEach((pekerjaan) => {
                     const row = document.createElement("tr");
-
-                    // Create the columns for the row
                     const statusCell = document.createElement("td");
                     statusCell.innerHTML = `<span class="status active">Aktif</span>`;
                     
                     const judulCell = document.createElement("td");
                     judulCell.innerHTML = `${pekerjaan.judulPekerjaan}<br><span>${pekerjaan.lokasiPekerjaan || "-"}</span>`;
-                    
-                    const kandidatCell = document.createElement("td");
-                    kandidatCell.textContent = "-";
-                    
-                    const pencarianCell = document.createElement("td");
-                    pencarianCell.textContent = "-";
-                    
-                    const kinerjaCell = document.createElement("td");
-                    kinerjaCell.textContent = "-";
-                    
-                    const tindakanCell = document.createElement("td");
-                    tindakanCell.textContent = "-";
 
-                    // Append the cells to the row
-                    row.appendChild(statusCell);
-                    row.appendChild(judulCell);
-                    row.appendChild(kandidatCell);
-                    row.appendChild(pencarianCell);
-                    row.appendChild(kinerjaCell);
-                    row.appendChild(tindakanCell);
+                    fetch(`{{ route("workersunion.getPekerjaanAndLamaran") }}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                        },
+                        body: JSON.stringify({ idPerusahaan, idPekerjaan: pekerjaan.idPekerjaan }), 
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json();
+                        })
+                        .then((lamaranData) => {
+                            const kandidatCell = document.createElement("td");
+                            kandidatCell.textContent = lamaranData['pekerjaan'].totalResumes || "-";
 
-                    // Append the row to the table body
+                            const tindakanCell = document.createElement("td");
+                            tindakanCell.textContent = lamaranData['pekerjaan'].totalResumes - parseInt(lamaranData['pekerjaan'].pendingResumes) ; 
+
+                            row.appendChild(statusCell);
+                            row.appendChild(judulCell);
+                            row.appendChild(kandidatCell);
+                            row.appendChild(tindakanCell);
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching lamaran data:", error);
+                        });
+
                     pekerjaanTableBody.appendChild(row);
                 });
             } else {
@@ -161,6 +163,7 @@
             console.error("Error loading pekerjaan:", error);
         });
 });
+
 
 </script>
 </html>

@@ -14,12 +14,11 @@
 <nav class="navbar">
   <h1><span class="highlight">Workers</span> Union</h1>
   <ul class="nav-list">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Pekerjaan</a></li>
+    <li><a href="{{ route('workersunion.halamanUtama') }}">Home</a></li>
+    <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Pekerjaan</a></li>
     <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
-    <li><a href="#">Tentang</a></li>
     <li><a href="{{ route('workersunion.loginIndex') }}" class="masuk">Masuk</a></li>
-    <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
+    <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}" class="post-job-btn">+ Posting Pekerjaan</a></li>
   </ul>
 </nav>
 

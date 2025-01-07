@@ -15,11 +15,10 @@
       <h1><span class="highlight">Seek</span> Employer</h1>
       <ul class="nav-list">
         <li><a href="{{ route('workersunion.homepagePerusahaanIndex') }}">Home</a></li>
-        <li><a href="#">Pekerjaan</a></li>
-        <li><a href="#">Produk</a></li>
-        <li><a href="#">{{ $perusahaans['namaBisnis'] }}</a></li>
+        <li><a href="{{ route('workersunion.pekerjaanPerusahaan') }}">Pekerjaan</a></li>
+        <li><a href="{{ route('workersunion.akunPerusahaanIndex') }}">{{ $perusahaans['namaBisnis'] }}</a></li>
         <li>
-          <button class="post-job-btn">+ Posting Pekerjaan</button>
+          <button class="post-job-btn" onclick="window.location.href='{{ route('workersunion.postingPekerjaanPage1') }}'">+ Posting Pekerjaan</button>
         </li>
       </ul>
     </div>
@@ -29,7 +28,7 @@
       <div class="main-header">
         <h1>Detail Akun</h1>
         <div class="new-account-btn-container">
-          <button class="new-account-btn">Buat Akun Baru</button>
+          <button class="new-account-btn" style="background-color:red;" onclick="window.location.href='{{ route('workersunion.halamanUtama') }}'">Log Out</button>
         </div>
       </div>
 

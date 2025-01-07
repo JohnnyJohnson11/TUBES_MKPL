@@ -509,5 +509,119 @@ public function postingPekerjaanStorePage4(Request $request)
         }
     }
 
-    
+    public function pekerjaanPerusahaan(){
+        $response = Http::post('http://localhost:3000/api/getDataPerusahaan', [
+            'idPerusahaan' => session('idPerusahaan')
+        ]);
+
+        $data = $response->json(); // Decode the response JSON
+        Log::info('API Response Data:', ['asdasdasd' => $data]);
+        $perusahaans = isset($data['data']) ? $data['data'] : null;
+
+        Log::info('Extracted User Data:', ['perusahaans' => $perusahaans]);
+
+        return view('pekerjaanPerusahaan.indexbuka', ['perusahaans' => $perusahaans]);
+    }
+
+    public function getPekerjaanAndLamaran(Request $request){
+        $validated = $request->validate([
+            'idPekerjaan' => 'required|integer',
+
+        ]);
+        $pekerjaanResponse = Http::post('http://localhost:3000/api/getPekerjaanAndLamaran', array_merge($validated, [
+            'idPerusahaan' => session('idPerusahaan'),
+        ]));
+        $pekerjaan = null;
+        if ($pekerjaanResponse->successful()) {
+            $data = $pekerjaanResponse->json();
+            $pekerjaan = $data['pekerjaans'][0] ?? null;
+            return response()->json([
+                'success' => true,
+                'pekerjaan' => $pekerjaan,
+            ]);
+        } else {
+            Log::error('Failed to fetch pekerja data from API.', [
+                'status' => $pekerjaanResponse->status(),
+                'response' => $pekerjaanResponse->body(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching skills.',
+            ], 500);
+        }
+    }
+
+    public function pekerjaanPerusahaanKandidat(Request $request){
+        $response = Http::post('http://localhost:3000/api/getDataPerusahaan', [
+            'idPerusahaan' => session('idPerusahaan')
+        ]);
+
+        $data = $response->json(); // Decode the response JSON
+        Log::info('API Response Data:', ['asdasdasd' => $data]);
+        $perusahaans = isset($data['data']) ? $data['data'] : null;
+
+        Log::info('Extracted User Data:', ['perusahaans' => $perusahaans]);
+
+        return view('pekerjaanPerusahaan.indexkandidat', ['perusahaans' => $perusahaans]);
+    }
+    public function getLamaran()
+    {
+        try {
+            $response = Http::get('http://localhost:3000/api/getLamaran');
+
+            if ($response->successful()) {
+                $lamaran = $response->json()['lamaran'] ?? [];
+                return response()->json([
+                    'success' => true,
+                    'lamaran' => $lamaran,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch lamaran data from the API.',
+            ], $response->status());
+        } catch (\Exception $e) {
+            Log::error('Error fetching lamaran data: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching lamaran data.',
+            ], 500);
+        }
+    }
+
+    public function handleLamaran(Request $request)
+    {
+        $validated = $request->validate([
+            'idLamaran' => 'required|integer',
+            'status' => 'required|in:diterima,ditolak',
+        ]);
+
+        try {
+            $response = Http::post('http://localhost:3000/api/handleLamaran', [
+                'idLamaran' => $validated['idLamaran'],
+                'status' => $validated['status'],
+            ]);
+
+            if ($response->successful()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Lamaran action processed successfully.',
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to handle lamaran action.',
+            ], $response->status());
+        } catch (\Exception $e) {
+            Log::error('Error handling lamaran action: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while processing the action.',
+            ], 500);
+        }
+    }
 }

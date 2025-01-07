@@ -212,5 +212,37 @@ class perusahaanModel{
             callback(null, results);
         });
       }
+
+      static getPekerjaanAndLamaran(idPerusahaan, idPekerjaan, callback){
+        const query = `SELECT 
+    pekerjaan.idPekerjaan,
+    pekerjaan.idPerusahaan,
+    pekerjaan.judulPekerjaan,
+    pekerjaan.lokasiPekerjaan,
+    pekerjaan.kategoriJabatan,
+    pekerjaan.kategoriGaji,
+    pekerjaan.jenisGaji,
+    pekerjaan.kisaranGaji,
+    pekerjaan.deskripsiPerusahaan,
+    pekerjaan.linkReferensi,
+    pekerjaan.pertanyaan,
+    pekerjaan.created_at AS pekerjaan_created_at,
+    COUNT(lamaran.idLamaran) AS totalResumes,
+    SUM(CASE WHEN lamaran.status = 'pending' THEN 1 ELSE 0 END) AS pendingResumes
+FROM pekerjaan 
+LEFT JOIN lamaran ON pekerjaan.idPekerjaan = lamaran.idPekerjaan 
+WHERE pekerjaan.idPerusahaan = ? AND pekerjaan.idPekerjaan = ?
+GROUP BY pekerjaan.idPekerjaan, pekerjaan.idPerusahaan, pekerjaan.judulPekerjaan, 
+         pekerjaan.lokasiPekerjaan, pekerjaan.kategoriJabatan, pekerjaan.kategoriGaji,
+         pekerjaan.jenisGaji, pekerjaan.kisaranGaji, pekerjaan.deskripsiPerusahaan, 
+         pekerjaan.linkReferensi, pekerjaan.pertanyaan, pekerjaan.created_at;
+`;
+        pool.query(query, [idPerusahaan, idPekerjaan], (error, results) => {
+          if (error) {
+              return callback(error, null);
+          }
+          callback(null, results);
+      });
+      }
 }
 module.exports = perusahaanModel;

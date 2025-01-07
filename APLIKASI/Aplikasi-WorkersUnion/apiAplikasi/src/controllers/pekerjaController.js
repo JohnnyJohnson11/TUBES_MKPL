@@ -318,7 +318,83 @@ class pekerjaController {
         return ResponseHandler.error(res, 500, "Unexpected error occurred");
     }
   };
-  
+  static async getAllLamaran(req, res) {
+    try {
+        pekerjaModel.getAllLamaran((error, lamaran) => {
+            if (error) {
+                console.error("Error fetching lamaran:", error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Failed to fetch lamaran data.",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                lamaran,
+            });
+        });
+    } catch (error) {
+        console.error("Unexpected error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An unexpected error occurred.",
+        });
+    }
+}
+
+static async handleLamaranAction(req, res) {
+    const { idLamaran, status } = req.body;
+
+    try {
+        pekerjaModel.handleLamaranAction(idLamaran, status, (error, results) => {
+            if (error) {
+                console.error("Error updating lamaran:", error);
+                return res.status(500).json({
+                    success: false,
+                    message: "Failed to process the action.",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Lamaran action processed successfully.",
+            });
+        });
+    } catch (error) {
+        console.error("Unexpected error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An unexpected error occurred.",
+        });
+    }
+}
+static async getResume(req, res) {
+  const { idPekerja } = req.body;
+
+  try {
+      pekerjaModel.getResume(idPekerja, (error, results) => {
+          if (error) {
+              console.error("Error updating lamaran:", error);
+              return res.status(500).json({
+                  success: false,
+                  message: "Failed to process the action.",
+              });
+          }
+
+          return res.status(200).json({
+              success: true,
+              data:results,
+          });
+      });
+  } catch (error) {
+      console.error("Unexpected error:", error);
+      return res.status(500).json({
+          success: false,
+          message: "An unexpected error occurred.",
+      });
+  }
+}
 }
 
 module.exports = pekerjaController;

@@ -16,11 +16,10 @@
         <h1><span class="highlight">Workers</span> Union</h1>
         <ul class="nav-list">
             <li><a href="{{ route('workersunion.homePage') }}">Home</a></li>
-            <li><a href="#">Pekerjaan</a></li>
+            <li><a href="{{ route('workersunion.lihatPekerjaan') }}">Pekerjaan</a></li>
             <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
-            <li><a href="#">Tentang</a></li>
-            <li><a href="#" class="masuk">{{$pekerjas['username']}}</a></li>
-            <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
+            <li><a href="{{ route("workersunion.profilePage") }}" class="masuk">{{$pekerjas['username']}}</a></li>
+            <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}" class="post-job-btn">+ Posting Pekerjaan</a></li>
         </ul>
     </nav>
 
@@ -284,6 +283,9 @@
             <!-- Email Section -->
                 <label for="summaryemail">Email</label>
                 <textarea id="summaryemail" rows="1" cols="50"></textarea>
+                <div id="ifexist">
+
+                </div>
                 <button class="save-btn" id="simpaninformasipribadibutton">Selesai</button>
                 <button class="cancel-btn" id="batalinformasipribadi">Batal</button>
             </div>
@@ -491,7 +493,7 @@ document.getElementById("simpanpendidikanbutton").addEventListener("click", func
         .then((data) => {
             if (data.success) {
                 // Update UI
-                document.getElementById("kursus").innerHTML = `<strong>${summaryKursusText}</strong>`
+                document.getElementById("kursus").innerHTML = `<strong>${summaryKursusText}</strong>`;
                 document.getElementById("lembaga").textContent = summaryLembagaText;
                 if (kualifikasiSelesai=="qualified"){
                   document.getElementById("tahun").textContent = summaryTahunText;
@@ -998,31 +1000,69 @@ document.getElementById("batalinformasipribadi").addEventListener("click", funct
 });
 
 document.getElementById("simpaninformasipribadibutton").addEventListener("click", function() {
+    document.getElementById("ifexist").innerHTML="";
   var summaryNamaText = document.getElementById("summarynamadepan").value+" "+document.getElementById("summarynamabelakang").value;
-  var summaryLokasiText = document.getElementById("summarylokasi").value;
-  var summaryEmailText = document.getElementById("summaryemail").value;
+  var summaryLokasiText = document.getElementById("summarylokasi").value.trim();
+  var summaryEmailText = document.getElementById("summaryemail").value.trim();
+  var summaryTeleponText = document.getElementById("phoneNumber").value.trim();
 
-  if (summaryNamaText.trim() === ""||summaryLokasiText.trim() === ""||summaryEmailText.trim() === "") {
-      alert("Data tidak boleh kosong.");
-      return;
-  }
+    if (!summaryNamaText||!summaryLokasiText||!summaryEmailText||!summaryTeleponText) {
+        alert("Semua bidang harus diisi.");
+        return;
+    }
+    const informasiPekerja = {
+        username: summaryNamaText,
+        lokasi: summaryLokasiText,
+        email: summaryEmailText,
+        nomorHP: summaryTeleponText,
+    };
 
-  document.getElementById("nama").innerHTML = summaryNamaText;
-  document.getElementById("lokasi").innerHTML = summaryLokasiText;
-  document.getElementById("email").innerHTML = summaryEmailText;
+    fetch('{{ route("workersunion.updatePekerja") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+        body: JSON.stringify(informasiPekerja),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        if (data.dontExist) {
+            document.getElementById("nama").innerHTML = summaryNamaText;
+            document.getElementById("lokasi").innerHTML = summaryLokasiText;
+            document.getElementById("email").innerHTML = summaryEmailText;
 
-  var existingSummary = summarySection.querySelector("p.summary-text");
-  if (existingSummary) {
-      existingSummary.innerHTML = summaryText; 
-  } else {
-      var newSummary = document.createElement("p");
-      newSummary.innerHTML = summaryText; 
-      newSummary.classList.add("summary-text");
-      content.innerHTML = ""; 
-      summarySection.insertBefore(newSummary, summarySection.querySelector(".add-button"));
-  }
-  document.getElementById("popup").classList.remove("active");
-  document.getElementById("summary").value = ""; 
+            var existingSummary = summarySection.querySelector("p.summary-text");
+            if (existingSummary) {
+                existingSummary.innerHTML = summaryText; 
+            } else {
+                var newSummary = document.createElement("p");
+                newSummary.innerHTML = summaryText; 
+                newSummary.classList.add("summary-text");
+                content.innerHTML = ""; 
+                summarySection.insertBefore(newSummary, summarySection.querySelector(".add-button"));
+            }
+
+            document.getElementById("popup").classList.remove("active");
+            document.getElementById("summary").value = ""; 
+            event.preventDefault();
+        } else if(!data.dontExist){
+            const submitEmail = document.createElement("p");
+            submitEmail.textContent = "email telah terdaftar";
+            submitEmail.style.cssText = "color:red";
+            document.getElementById("ifexist").appendChild(submitEmail);
+        }else{
+            alert(`Error: ${data.message}`);
+        }
+    })
+    .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
 });
 
 document.addEventListener("DOMContentLoaded", () => {

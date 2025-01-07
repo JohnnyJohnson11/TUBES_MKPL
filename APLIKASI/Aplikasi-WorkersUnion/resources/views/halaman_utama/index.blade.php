@@ -14,9 +14,8 @@
         <h1><span class="highlight">Workers</span> Union</h1>
         <ul class="nav-list">
             <li><a href="#">Home</a></li>
-            <li><a href="">Pekerjaan</a></li>
+            <li><a href="{{ route('workersunion.loginIndex') }}">Pekerjaan</a></li>
             <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
-            <li><a href="#">Tentang</a></li>
             <li><a href="{{ route('workersunion.loginIndex') }}">Masuk</a></li>
             </li>
             <li><button class="post-job-btn">+ Posting Pekerjaan</button></li>

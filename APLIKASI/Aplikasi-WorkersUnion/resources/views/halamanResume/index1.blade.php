@@ -13,11 +13,11 @@
     <nav class="navbar">
         <h1 style="color: #FC766A;"><span class="highlight">Workers</span> Union</h1>
         <ul class="nav-list">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Pekerjaan</a></li>
-            <li><a href="#">Perusahaan</a></li>
-            <li><a href="#">Tentang</a></li>
-            <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
+            <li><a href="{{ route('workersunion.homePage') }}">Home</a></li>
+            <li><a href="{{ route('workersunion.lihatPekerjaan') }}">Pekerjaan</a></li>
+            <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
+            <li><a href="{{ route("workersunion.profilePage") }}" class="username">{{$pekerjas['username']}} </a></li>
+            <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}" class="post-job-btn">+ Posting Pekerjaan</a></li>
         </ul>
     </nav>
 

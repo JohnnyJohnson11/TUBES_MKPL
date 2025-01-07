@@ -19,5 +19,8 @@ router.post('/addBahasa', pekerjaController.addBahasa);
 router.post('/uploadResume', pekerjaController.uploadResume);
 router.post('/updatePekerja', pekerjaController.updatePekerja);
 router.post('/createLamaran', pekerjaController.createLamaran);
+router.get('/getLamaran',pekerjaController.getAllLamaran);
+router.post('/handleLamaran',pekerjaController.handleLamaranAction);
+router.post('/getResume',pekerjaController.getResume);
 
 module.exports = router;

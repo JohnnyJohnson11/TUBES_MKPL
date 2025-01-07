@@ -12,6 +12,7 @@ class PekerjaController extends Controller
     public function halamanUtamaIndex()
     {
         session()->forget('idPekerja');
+        session()->forget('idPerusahaan');
         return view('halaman_utama.index');
     }
     public function daftarIndex()
@@ -53,6 +54,27 @@ class PekerjaController extends Controller
         }
     }
 
+    public function getDataPekerja(Request $request){
+        $validated = $request->validate([
+            'idPekerja' => 'required|integer',
+        ]);
+        $response = Http::post('http://localhost:3000/api/getDataPekerja', [
+            'idPekerja' => $validated['idPekerja']
+        ]);
+        if ($response->successful()) {
+            $data = $response->json()['data'][0] ?? [];
+            return response()->json([
+                'success' => true,
+                'message' => 'Ringkasan added successfully!',
+                'data' => $data,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to add ringkasan.',
+            ], 400);
+        }
+    }
 
     public function checkEmail(Request $request)
     {
@@ -95,10 +117,6 @@ class PekerjaController extends Controller
 
     public function logIn(Request $request)
     {
-        Log::info('Login request received', [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'), 
-        ]);
         $validated = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -106,10 +124,6 @@ class PekerjaController extends Controller
         $response = Http::post('http://localhost:3000/api/verifyPassword', [
             'email' => $validated['email'],
             'password' => $validated['password'],
-        ]);
-        Log::info('Raw response body from Node.js API', [
-            'response_body' => $response->body(),
-            'response_status' => $response->status(),
         ]);
 
         if ($response->successful()) {
@@ -134,11 +148,6 @@ class PekerjaController extends Controller
                 'message' => 'Invalid email or password.',
             ]);
         }
-
-        Log::error('Failed to verify credentials', [
-            'status' => $response->status(),
-            'body' => $response->body(),
-        ]);
 
         return response()->json([
             'success' => false,
@@ -717,6 +726,39 @@ class PekerjaController extends Controller
     
             return redirect()->back()->withErrors('An error occurred while fetching combined data.');
         }
+    }
+
+    public function getResume(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'idPekerja' => 'required|integer',
+            ]);
+            $response = Http::post('http://localhost:3000/api/getResume', [
+                'idPekerja' => $validated['idPekerja'],
+            ]);
+
+            if ($response->successful()) {
+                $resume = $response->json()['data'][0] ?? [];
+                return response()->json([
+                    'success' => true,
+                    'resume' => $resume,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch lamaran data from the API.',
+            ], $response->status());
+        } catch (\Exception $e) {
+            Log::error('Error fetching lamaran data: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching lamaran data.',
+            ], 500);
+        }
+       
     }
 }
 

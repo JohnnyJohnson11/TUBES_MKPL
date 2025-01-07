@@ -17,8 +17,7 @@
       <h1><span class="highlight">Seek</span> Employer</h1>
       <ul class="nav-list">
         <li><a href="{{ route('workersunion.homepagePerusahaanIndex') }}">Home</a></li>
-        <li><a href="#">Pekerjaan</a></li>
-        <li><a href="#">Produk</a></li>
+        <li><a href="{{ route('workersunion.pekerjaanPerusahaan') }}">Pekerjaan</a></li>
         <li><a href="{{ route('workersunion.akunPerusahaanIndex') }}">{{$perusahaans['namaBisnis']}}</a></li> 
         <li><button class="post-job-btn">+ Posting Pekerjaan</button></li>
       </ul>

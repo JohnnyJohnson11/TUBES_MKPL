@@ -15,16 +15,12 @@
         @if (session()->has('idPekerja'))
         <ul class="nav-list">
             <li><a href="{{ route('workersunion.homePage') }}">Home</a></li>
-            <li><a href="#">Pekerjaan</a></li>
+            <li><a href="{{ route('workersunion.lihatPekerjaan') }}">Pekerjaan</a></li>
             <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
-            <li><a href="#">Tentang</a></li>
             <li class="user-menu">
-                <a href="#" class="username">{{$pekerjas['username']}} <span>&#9662;</span></a>
+                <a href="#" class="username">{{$pekerjas[0]['username']}} <span>&#9662;</span></a>
                 <div class="dropdown-menu">
                     <a href='{{ route("workersunion.profilePage") }}'>Lihat Profil</a>
-                    <a href="D:\WebPro\TUBES-WEBPRO-Muhammad-Rafi-Nadhif_1302220142\pekerjaan tersimpan\lamar.html">Pekerjaan Tersimpan</a>
-                    <a href="#">Lamaran Kerja</a>
-                    <a href="#">Pengaturan</a>
                     <a href="{{ route('workersunion.halamanUtama') }}">Keluar</a>
                 </div>
             </li>
@@ -33,11 +29,10 @@
         @else
         <ul class="nav-list">
           <li><a href="{{ route('workersunion.halamanUtama') }}">Home</a></li>
-          <li><a href="#">Pekerjaan</a></li>
+          <li><a href="{{ route('workersunion.loginIndex') }}">Pekerjaan</a></li>
           <li><a href="#">Perusahaan</a></li>
-          <li><a href="#">Tentang</a></li> 
           <li><a href="{{ route('workersunion.loginIndex') }}">Masuk</a></li> 
-          <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
+          <li><a href="{{route('workersunion.logInPerusahaanIndex')}}" class="post-job-btn">+ Posting Pekerjaan</a></li>
         </ul>
         @endif
       </nav>

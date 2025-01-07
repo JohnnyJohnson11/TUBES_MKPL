@@ -12,12 +12,11 @@
   <nav class="navbar">
     <h1><span class="highlight">Workers</span> Union</h1>
     <ul class="nav-list">
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Pekerjaan</a></li>
-      <li><a href="#">Perusahaan</a></li>
-      <li><a href="#">Tentang</a></li> 
-      <li><a href="#">John</a></li> 
-      <li><a href="#" class="post-job-btn">+ Posting Pekerjaan</a></li>
+        <li><a href="{{ route('workersunion.homePage') }}">Home</a></li>
+        <li><a href="{{ route('workersunion.pekerjaanPerusahaan') }}">Pekerjaan</a></li>
+        <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}">Perusahaan</a></li>
+        <li><a href="{{ route("workersunion.profilePage") }}" class="masuk">{{$pekerjas['username']}}</a></li>
+        <li><a href="{{ route('workersunion.halamanUtamaPerusahaan') }}" class="post-job-btn">+ Posting Pekerjaan</a></li>
     </ul>
   </nav>
   

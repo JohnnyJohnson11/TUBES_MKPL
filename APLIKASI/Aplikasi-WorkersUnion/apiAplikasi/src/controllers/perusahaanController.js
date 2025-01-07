@@ -223,5 +223,42 @@ class perusahaanController{
             });
         }
       }
+
+
+      //pemisah biar ga bingung
+
+
+      static async getPekerjaanAndLamaran(req, res) {
+        const { idPerusahaan, idPekerjaan } = req.body;
+        if (!idPerusahaan) {
+            return res.status(400).json({
+                success: false,
+                message: "idPekerja is required.",
+            });
+        }
+        try {
+            PerusahaanModel.getPekerjaanAndLamaran(idPerusahaan, idPekerjaan, (error, results) => {
+                if (error) {
+                    console.error("Error fetching skills:", error);
+                    return res.status(500).json({
+                        success: false,
+                        message: "Failed to fetch skills.",
+                    });
+                }
+
+                return res.status(200).json({
+                    success: true,
+                    pekerjaans: results,
+                });
+            });
+        } catch (error) {
+            console.error("Unexpected error:", error);
+            return res.status(500).json({
+                success: false,
+                message: "An unexpected error occurred.",
+            });
+        }
+      }
+      
 }
 module.exports = perusahaanController;
