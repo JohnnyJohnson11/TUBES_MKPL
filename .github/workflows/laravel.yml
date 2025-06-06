@@ -1,14 +1,17 @@
-name: Continuous Testing (Laravel)
+name: Continuous Deployment (Laravel)
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_run:
+    workflows: ["Continuous Testing (Laravel)"]
+    types:
+      - completed
 
 jobs:
-  laravel-tests:
+  deploy:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
     - name: Checkout code
@@ -19,7 +22,6 @@ jobs:
       with:
         php-version: '8.2'
         extensions: mbstring, bcmath, mysql
-        coverage: xdebug
 
     - name: Install Composer dependencies
       run: composer install --no-progress --prefer-dist --optimize-autoloader
@@ -33,12 +35,22 @@ jobs:
       run: php artisan key:generate
       working-directory: APLIKASI/Aplikasi-WorkersUnion
 
-    - name: Run Laravel tests with coverage
-      run: php artisan test --coverage
-      working-directory: APLIKASI/Aplikasi-WorkersUnion
-
-    - name: Upload test results Continuous Testing
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results
-        path: APLIKASI/Aplikasi-WorkersUnion/tests/coverage
+    - name: Deploy to Server via SSH
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        ssh -i private_key.pem -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
+          cd /var/www/aplikasi-workersunion
+          git pull origin main
+          composer install --no-progress --prefer-dist --optimize-autoloader
+          php artisan migrate --force
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
+          php artisan queue:restart
+        EOF
