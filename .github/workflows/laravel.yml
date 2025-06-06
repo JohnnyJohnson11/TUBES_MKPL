@@ -37,8 +37,8 @@ jobs:
       run: php artisan test --coverage
       working-directory: APLIKASI/Aplikasi-WorkersUnion
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v3
+    - name: Upload test results Continuous Testing
+      uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: APLIKASI/Aplikasi-WorkersUnion/tests/coverage
