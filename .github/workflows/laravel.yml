@@ -1,7 +1,8 @@
-
-name: Continuous Integration (Laravel)
+name: Continuous Testing (Laravel)
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -18,7 +19,7 @@ jobs:
       with:
         php-version: '8.2'
         extensions: mbstring, bcmath, mysql
-        coverage: none
+        coverage: xdebug
 
     - name: Install Composer dependencies
       run: composer install --no-progress --prefer-dist --optimize-autoloader
@@ -32,6 +33,12 @@ jobs:
       run: php artisan key:generate
       working-directory: APLIKASI/Aplikasi-WorkersUnion
 
-    - name: Run Laravel tests
-      run: php artisan test
+    - name: Run Laravel tests with coverage
+      run: php artisan test --coverage
       working-directory: APLIKASI/Aplikasi-WorkersUnion
+
+    - name: Upload test results Continuous Testing
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: APLIKASI/Aplikasi-WorkersUnion/tests/coverage
