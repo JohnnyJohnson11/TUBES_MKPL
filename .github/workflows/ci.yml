@@ -21,12 +21,16 @@ jobs:
 
     - name: Install Composer dependencies
       run: composer install --no-progress --prefer-dist --optimize-autoloader
+      working-directory: APLIKASI/Aplikasi-WorkersUnion
 
     - name: Copy .env
       run: cp .env.example .env
+      working-directory: APLIKASI/Aplikasi-WorkersUnion
 
     - name: Generate app key
       run: php artisan key:generate
+      working-directory: APLIKASI/Aplikasi-WorkersUnion
 
     - name: Run Laravel tests
       run: php artisan test
+      working-directory: APLIKASI/Aplikasi-WorkersUnion
