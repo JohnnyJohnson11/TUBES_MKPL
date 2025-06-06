@@ -97,7 +97,7 @@
         <h1 style="font-size: 40px;">Rekrut Mudah dalam 3 Langkah Sederhana</h1>
         <div style="display: flex;">
             <div style="width: 47%; display: flex; justify-content: flex-end; margin-right: 5px;">
-                <img src="images/chinesedude.png" style="width: 80%;">
+                <img src="images/chinesedude.png" style="width: 80%;" alt="" />
             </div>
             <div style="width: 60%">
                 <div class="steps">
